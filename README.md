@@ -23,6 +23,7 @@
 ### 二、安装
 
     npm install webpack-code-spliter --save
+    npm install code-spliter-router --save
     
      
 ### 三、使用
@@ -78,16 +79,19 @@ Webpack config example:
 
 express react split isormophic
 
+##
+     npm install code-spliter-router --save
+
 ```js
 
     import ReactDOMServer from 'react-dom/server';
     import ApplicationComponent from './src/app/index.js';
-    import CodeSpliter from 'webpack-code-spliter';
+    import CodeSpliterRouter from 'code-spliter-router';
 
     //app =  express()
     app.use('/react',(req,resp,next)=>{
         let initialHTML = ReactDOMServer.renderToString(ApplicationComponent)
-        let routejs = CodeSpliter.getRoutejs(req);
+        let routejs = CodeSpliterRouter.getRoutejs(req);
         let options = {
             title: '页面标题',
             routejs:routejs
