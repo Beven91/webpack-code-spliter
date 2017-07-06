@@ -77,7 +77,7 @@ CodeSpliterPlugin.prototype.registryReplaceModuleId = function (compilation) {
         if (source) {
             var originalId = findEnsureModuleId(module);
             source.replacements.forEach(function (replace) {
-                if (replace[2] === 'require.moduleId') {
+                if (replace[2] === REPLACEMENT) {
                     replace[2] = originalId;
                 }
             })

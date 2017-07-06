@@ -20,7 +20,7 @@ function Configure(name, rootDir, points) {
     if (this.index) {
         this.routes[''] = this.routes[this.index];
     }
-    CodeSpliterRouter.save();
+    CodeSpliterRouter.save(this.routes);
 }
 
 /**
