@@ -100,7 +100,7 @@ CodeSpliterPlugin.prototype.findEnsureModuleId = function (module) {
             }
         })
     })
-    return id;
+    return id.toString();
 }
 
 module.exports = CodeSpliterPlugin;
