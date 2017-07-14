@@ -31,13 +31,14 @@ CodeSpliterPlugin.REPLACEMENT = REPLACEMENT;
 /**
  * 配置loader
  * @param {Array<String>} splitPoints 拆分点
- * @param {String} name 拆分代码存放目录名称 默认:pages
  * @param {String} rootDir 如果splitPoints 中的项为相对路径 则rootDir为相对路径的相对目录 默认为process.cwd()
+ * @param {String} name 拆分代码存放目录名称 默认:pages
+ * @param {Function} splitHandle 自定义loader exports
  */
-CodeSpliterPlugin.configure = function (splitPoints,rootDir,name) {
+CodeSpliterPlugin.configure = function (splitPoints,rootDir,name,splitHandle) {
     var dir = name || PAGES;
     var rootDir = rootDir || process.cwd();
-    var configure = new Configure(dir, rootDir, splitPoints);
+    var configure = new Configure(dir, rootDir, splitPoints,splitHandle);
     return {
         includes: configure.includes,
         options: configure.options,
