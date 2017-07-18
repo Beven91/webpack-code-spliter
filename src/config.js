@@ -6,6 +6,7 @@
 
 var path = require('path');
 var url = require('url');
+var fs = require('fs');
 var CodeSpliterRouter = require('code-spliter-router')
 var querystring = require('querystring');
 
@@ -21,6 +22,16 @@ function Configure(name, rootDir, points, splitHandle) {
     this.routes[''] = this.routes[this.index];
   }
   CodeSpliterRouter.save(this.routes);
+}
+
+/**
+ * 保存配置
+ */
+Configure.prototype.saveTo = function (targetRoot) {
+  if (!fs.existsSync(targetRoot)) {
+    fs.mkdirSync(targetRoot);
+  }
+  CodeSpliterRouter.save(this.routes, targetRoot);
 }
 
 /**

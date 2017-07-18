@@ -50,7 +50,8 @@ Webpack config example:
             chunkFilename: '[name]',
         },
         plugins:[
-            new CodeSpliterPlugin()
+            //targetRoot ：发布目标web运行根目录即目标(process.cwd())
+            new CodeSpliterPlugin(targetRoot)
         ],
         module:{
             loaders:[

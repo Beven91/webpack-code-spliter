@@ -21,8 +21,10 @@ var PAGES = 'pages';
 
 /**
  * 插件构造函数
+ * @param targetRoot 目标web启动目录
  */
-function CodeSpliterPlugin() {
+function CodeSpliterPlugin(targetRoot) {
+    this.targetRoot = targetRoot;
 }
 
 //require.ensureModuleId 变量
@@ -35,10 +37,10 @@ CodeSpliterPlugin.REPLACEMENT = REPLACEMENT;
  * @param {String} name 拆分代码存放目录名称 默认:pages
  * @param {Function} splitHandle 自定义loader exports
  */
-CodeSpliterPlugin.configure = function (splitPoints,rootDir,name,splitHandle) {
+CodeSpliterPlugin.configure = function (splitPoints, rootDir, name, splitHandle) {
     var dir = name || PAGES;
     var rootDir = rootDir || process.cwd();
-    var configure = new Configure(dir, rootDir, splitPoints,splitHandle);
+    var configure = this.configure = new Configure(dir, rootDir, splitPoints, splitHandle);
     return {
         includes: configure.includes,
         options: configure.options,
@@ -50,10 +52,18 @@ CodeSpliterPlugin.configure = function (splitPoints,rootDir,name,splitHandle) {
  * 插件执行入口函数
  */
 CodeSpliterPlugin.prototype.apply = function (compiler) {
+    if (!this.configure) {
+        throw new Error("Please config spliter  example: CodeSpliterPlugin.configure(...)")
+    }
     var thisContext = this;
     compiler.plugin('compilation', function (compilation, params) {
         thisContext.registryReplacement(params);
         thisContext.registryReplaceModuleId(compilation);
+    })
+    compiler.plugin('emit', function () {
+        if(thisContext.targetRoot){
+            thisContext.configure.saveTo(thisContext.targetRoot);
+        }
     })
 }
 
