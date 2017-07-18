@@ -1,6 +1,6 @@
 {
   "name": "webpack-code-spliter",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "webpack code split for react isormophic",
   "main": "src/index.js",
   "scripts": {

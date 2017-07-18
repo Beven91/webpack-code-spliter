@@ -65,8 +65,8 @@ CodeSpliterPlugin.prototype.apply = function (compiler) {
     if (thisContext.targetRoot) {
       CONFIGURE.saveTo(thisContext.targetRoot);
       CONFIGURE = null;
-      cb();
     }
+    cb();
   })
 }
 
