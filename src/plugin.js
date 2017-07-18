@@ -18,13 +18,14 @@ var Configure = require('./config.js');
 
 var REPLACEMENT = "require.ensureModuleId";
 var PAGES = 'pages';
+var CONFIGURE = null;
 
 /**
  * 插件构造函数
  * @param targetRoot 目标web启动目录
  */
 function CodeSpliterPlugin(targetRoot) {
-    this.targetRoot = targetRoot;
+  this.targetRoot = targetRoot;
 }
 
 //require.ensureModuleId 变量
@@ -38,33 +39,35 @@ CodeSpliterPlugin.REPLACEMENT = REPLACEMENT;
  * @param {Function} splitHandle 自定义loader exports
  */
 CodeSpliterPlugin.configure = function (splitPoints, rootDir, name, splitHandle) {
-    var dir = name || PAGES;
-    var rootDir = rootDir || process.cwd();
-    var configure = this.configure = new Configure(dir, rootDir, splitPoints, splitHandle);
-    return {
-        includes: configure.includes,
-        options: configure.options,
-        loader: require.resolve('./loader.js')
-    }
+  var dir = name || PAGES;
+  var rootDir = rootDir || process.cwd();
+  var configure = CONFIGURE = new Configure(dir, rootDir, splitPoints, splitHandle);
+  return {
+    includes: configure.includes,
+    options: configure.options,
+    loader: require.resolve('./loader.js')
+  }
 }
 
 /**
  * 插件执行入口函数
  */
 CodeSpliterPlugin.prototype.apply = function (compiler) {
-    if (!this.configure) {
-        throw new Error("Please config spliter  example: CodeSpliterPlugin.configure(...)")
+  if (!CONFIGURE) {
+    throw new Error("Please config spliter  example: CodeSpliterPlugin.configure(...)")
+  }
+  var thisContext = this;
+  compiler.plugin('compilation', function (compilation, params) {
+    thisContext.registryReplacement(params);
+    thisContext.registryReplaceModuleId(compilation);
+  })
+  compiler.plugin('emit', function (compilation, cb) {
+    if (thisContext.targetRoot) {
+      CONFIGURE.saveTo(thisContext.targetRoot);
+      CONFIGURE = null;
+      cb();
     }
-    var thisContext = this;
-    compiler.plugin('compilation', function (compilation, params) {
-        thisContext.registryReplacement(params);
-        thisContext.registryReplaceModuleId(compilation);
-    })
-    compiler.plugin('emit', function () {
-        if(thisContext.targetRoot){
-            thisContext.configure.saveTo(thisContext.targetRoot);
-        }
-    })
+  })
 }
 
 /**
@@ -72,30 +75,30 @@ CodeSpliterPlugin.prototype.apply = function (compiler) {
  * 用于替换split-loader中的require.ensureModuleId
  */
 CodeSpliterPlugin.prototype.registryReplacement = function (params) {
-    params.normalModuleFactory.plugin("parser", function (parser) {
-        parser.plugin('expression ' + REPLACEMENT, ParserHelpers.toConstantDependency(REPLACEMENT));
-        parser.plugin('evaluate typeof ' + REPLACEMENT, ParserHelpers.evaluateToString('string'));
-    })
+  params.normalModuleFactory.plugin("parser", function (parser) {
+    parser.plugin('expression ' + REPLACEMENT, ParserHelpers.toConstantDependency(REPLACEMENT));
+    parser.plugin('evaluate typeof ' + REPLACEMENT, ParserHelpers.evaluateToString('string'));
+  })
 }
 
 /**
  * 注册替换require.ensureModuleId 为具体的module.id
  */
 CodeSpliterPlugin.prototype.registryReplaceModuleId = function (compilation) {
-    var findEnsureModuleId = this.findEnsureModuleId.bind(this);
-    compilation.moduleTemplate.plugin('module', function (moduleSource, module, chunk, dependencyTemplates) {
-        var source = moduleSource._source;
-        if (source) {
-            var originalId = findEnsureModuleId(module);
-            var replacements = source.replacements || [];
-            replacements.forEach(function (replace) {
-                if (replace[2] === REPLACEMENT) {
-                    replace[2] = originalId;
-                }
-            })
+  var findEnsureModuleId = this.findEnsureModuleId.bind(this);
+  compilation.moduleTemplate.plugin('module', function (moduleSource, module, chunk, dependencyTemplates) {
+    var source = moduleSource._source;
+    if (source) {
+      var originalId = findEnsureModuleId(module);
+      var replacements = source.replacements || [];
+      replacements.forEach(function (replace) {
+        if (replace[2] === REPLACEMENT) {
+          replace[2] = originalId;
         }
-        return moduleSource;
-    })
+      })
+    }
+    return moduleSource;
+  })
 }
 
 /**
@@ -103,16 +106,16 @@ CodeSpliterPlugin.prototype.registryReplaceModuleId = function (compilation) {
  * @param {Module} module webpack加载的模块
  */
 CodeSpliterPlugin.prototype.findEnsureModuleId = function (module) {
-    var blocks = module.blocks;
-    var id = -1;
-    blocks.forEach(function (block) {
-        block.dependencies.forEach(function (dep) {
-            if (dep.module) {
-                id = dep.module.id;
-            }
-        })
+  var blocks = module.blocks;
+  var id = -1;
+  blocks.forEach(function (block) {
+    block.dependencies.forEach(function (dep) {
+      if (dep.module) {
+        id = dep.module.id;
+      }
     })
-    return id.toString();
+  })
+  return id.toString();
 }
 
 module.exports = CodeSpliterPlugin;

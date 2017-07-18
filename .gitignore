@@ -12,6 +12,7 @@ yarn.lock
 __tests__/
 node_modules/
 bower_modules/
+package-lock.json
 .sass-cache/
 /release/
 npm-debug.log
