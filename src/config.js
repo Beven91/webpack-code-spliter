@@ -6,7 +6,7 @@
 
 var path = require('path');
 var url = require('url');
-var fs = require('fs');
+var fs = require('fs-extra');
 var CodeSpliterRouter = require('code-spliter-router')
 var querystring = require('querystring');
 
@@ -29,7 +29,7 @@ function Configure(name, rootDir, points, splitHandle) {
  */
 Configure.prototype.saveTo = function (targetRoot) {
   if (!fs.existsSync(targetRoot)) {
-    fs.mkdirSync(targetRoot);
+    fs.ensureDirSync(targetRoot);
   }
   CodeSpliterRouter.save(this.routes, targetRoot);
 }
