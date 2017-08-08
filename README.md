@@ -11,16 +11,24 @@
 
 <p>当浏览器访问同构页面时服务端返回页面中引用拆分后的对应的js</p>
 <p>例如拆分后文件如下：</p>
-<p>    app.js</p>
-<p>    common.js</p>
-<p>    pages/index.split.js</p>
-<p>    pages/user.split.js</p>
-<p>    pages/login.split.js</p>
+
+- app.js 
+
+- common.js
+
+- pages/index.split.js
+
+- pages/user.split.js
+
+- pages/login.split.js
 
 <p>当浏览器访问user页面时服务端返回:</p>
-<p>common.js</p>
-<p>pages/user.split.js</p>
-<p>app.js</p>
+
+- common.js
+
+- pages/user.split.js
+
+- app.js
 
 
 ### 二、安装
