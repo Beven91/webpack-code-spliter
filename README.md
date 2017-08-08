@@ -23,8 +23,6 @@
 ### 二、安装
 
     npm install webpack-code-spliter --save
-    npm install code-spliter-router --save
-    
      
 ### 三、使用
 
