@@ -76,8 +76,11 @@
 
 ### 四、关于SSR使用
 
-##
+安装:
+
      npm install code-spliter-router --save
+
+代码示例:
 
 ```js
 
