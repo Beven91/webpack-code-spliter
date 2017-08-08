@@ -3,7 +3,7 @@
 ### 一、简介
 
     用于实现webpack代码拆分，主要用于异步加载模块，
-    但是在react同构模式下，异步加载会导致checksum不一致问题，
+    但是在react同构模式下，异步加载会导致checksum不一致，
     所以使用此工具，用于解决react同构模式下的代码拆分
     原理：
         当浏览器访问同构页面时服务端返回页面中引用拆分后的对应的js
@@ -24,9 +24,7 @@
 
     npm install webpack-code-spliter --save
      
-### 三、使用
-
-Webpack config example:
+### 三、Webpack使用
 
 ```js
     var CodeSpliterPlugin  = require('webpack-code-spliter').CodeSpliterPlugin;
@@ -76,7 +74,7 @@ Webpack config example:
 
 ```
 
-express react split isormophic
+### 四、关于SSR使用
 
 ##
      npm install code-spliter-router --save
@@ -120,5 +118,5 @@ express react split isormophic
 
 ```
 
-### 四、开源许可
+### 五、开源许可
 基于 [MIT License](http://zh.wikipedia.org/wiki/MIT_License) 开源，使用代码只需说明来源，或者引用 [license.txt](https://github.com/sofish/typo.css/blob/master/license.txt) 即可。
