@@ -15,6 +15,7 @@ function Configure(name, rootDir, points, splitHandle) {
   this.points = points || [];
   this.routes = {};
   this.name = name;
+  this.pathRoutes ={};
   this.options = { points: {}, splitHandle: splitHandle };
   this.includes = [];
   this.split();
@@ -28,6 +29,7 @@ function Configure(name, rootDir, points, splitHandle) {
  * 保存配置
  */
 Configure.prototype.saveTo = function (targetRoot) {
+  targetRoot = targetRoot || this.rootDir;
   if (!fs.existsSync(targetRoot)) {
     fs.ensureDirSync(targetRoot);
   }
@@ -53,10 +55,14 @@ Configure.prototype.iterator = function (point) {
     return this.index = src.split('index=')[1];
   }
   var file = path.isAbsolute(src) ? src : path.join(this.rootDir, src)
-  name = name ? name : file.split(path.sep).slice(-3).join('.');
-  name = this.name + '/' + name.toLowerCase() + '.js';
+  var parser = path.parse(file);
+  var chunkPath =path.join(parser.root,parser.dir);
+  name = name ? name : chunkPath.split(path.sep).join('.');
+  name = this.name + '/' + name.toLowerCase();
   if (route.name) {
-    this.routes[route.name.replace(/(^\/|\/$)/g, '')] = name;
+    var routeName = route.name.replace(/(^\/|\/$)/g, '');
+    this.routes[routeName] = name;
+    this.pathRoutes[name] = routeName
   }
   points[file.toLowerCase().replace(/\\/g, '/')] = name;
   this.includes.push(file);
