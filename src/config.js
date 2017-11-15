@@ -22,7 +22,7 @@ function Configure(name, rootDir, points, splitHandle) {
   if (this.index) {
     this.routes[''] = this.routes[this.index];
   }
-  CodeSpliterRouter.save(this.routes);
+  //CodeSpliterRouter.save(this.routes);
 }
 
 /**
