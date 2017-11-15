@@ -58,7 +58,8 @@ module.exports = {
     },
     plugins:[
         //targetRoot ：发布目标web运行根目录即目标(process.cwd())
-        new CodeSpliterPlugin(targetRoot)
+        //isormopic: 是否为react同构代码拆分 默认为 true 如果为false  不会生成spliter.json(同构路由映射文件自动生成)
+        new CodeSpliterPlugin(targetRoot,isormopic)
     ],
     module:{
         loaders:[

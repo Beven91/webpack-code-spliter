@@ -23,9 +23,11 @@ var CONFIGURE = null;
 /**
  * 插件构造函数
  * @param targetRoot 目标web启动目录
+ * @param isormopic 是否React同构代码拆分
  */
-function CodeSpliterPlugin(targetRoot) {
+function CodeSpliterPlugin(targetRoot, isormopic) {
   this.targetRoot = targetRoot;
+  this.isormopic = (isormopic === undefined || isormopic === null) ? true : isormopic;
 }
 
 //require.ensureModuleId 变量
@@ -61,13 +63,22 @@ CodeSpliterPlugin.prototype.apply = function (compiler) {
     thisContext.registryReplacement(params);
     thisContext.registryReplaceModuleId(compilation);
   })
-  compiler.plugin('emit', function (compilation, cb) {
-    if (thisContext.targetRoot) {
+  if (this.isormopic) {
+    compiler.plugin('emit', function (compilation, cb) {
+      var pathRoutes = CONFIGURE.pathRoutes || {};
+      var routes = CONFIGURE.routes || {};
+      var chunks = compilation.chunks || [];
+      chunks.map(function (chunk) {
+        var name = pathRoutes[chunk.name];
+        if (name) {
+          routes[name] = chunk.files[0];
+        }
+      })
       CONFIGURE.saveTo(thisContext.targetRoot);
       CONFIGURE = null;
-    }
-    cb();
-  })
+      cb();
+    })
+  }
 }
 
 /**
