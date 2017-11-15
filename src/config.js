@@ -57,7 +57,8 @@ Configure.prototype.iterator = function (point) {
   var file = path.isAbsolute(src) ? src : path.join(this.rootDir, src)
   var parser = path.parse(file);
   var chunkPath =path.join(parser.root,parser.dir);
-  name = name ? name : chunkPath.split(path.sep).join('.');
+  chunkPath = chunkPath.split(this.rootDir).filter(filterEmpty).join('')
+  name = name ? name : chunkPath.split(path.sep).filter(filterEmpty).join('.');
   name = this.name + '/' + name.toLowerCase();
   if (route.name) {
     var routeName = route.name.replace(/(^\/|\/$)/g, '');
@@ -66,6 +67,10 @@ Configure.prototype.iterator = function (point) {
   }
   points[file.toLowerCase().replace(/\\/g, '/')] = name;
   this.includes.push(file);
+}
+
+function filterEmpty(item){
+    return item;
 }
 
 module.exports = Configure;
