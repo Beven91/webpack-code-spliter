@@ -13,7 +13,7 @@ function CodeSplitLoader() {
 
 CodeSplitLoader.pitch = function (remainingRequest) {
   this.cacheable && this.cacheable();
-  var file = remainingRequest.indexOf("!") > -1 ? remainingRequest.split('!')[1] : remainingRequest;
+  var file = this.resourcePath;
   var options = loaderUtils.getOptions(this) || {};
   var splitPoints = options.points;
   var splitHandle = options.splitHandle;
