@@ -75,7 +75,6 @@ CodeSpliterPlugin.prototype.apply = function (compiler) {
         }
       })
       CONFIGURE.saveTo(thisContext.targetRoot);
-      CONFIGURE = null;
       cb();
     })
   }
