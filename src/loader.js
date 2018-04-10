@@ -22,7 +22,7 @@ CodeSplitLoader.pitch = function (remainingRequest) {
   splitHandle = typeof splitHandle === 'function' ? splitHandle : defaultHandle;
   if (name) {
     var myOptions = {
-      context: options.context || this.options.context,
+      context: options.context || this.context || (this.options || {}).context,
       regExp: options.regExp
     };
     chunkNameParam = ", " + JSON.stringify(loaderUtils.interpolateName(this, name, myOptions));
@@ -38,7 +38,7 @@ CodeSplitLoader.pitch = function (remainingRequest) {
     "if(__webpack_require__.m[" + REPLACEMENT + "]){",
     " module.exports = __webpack_require__(" + REPLACEMENT + ");",
     "}else{",
-    "module.exports=" + splitHandle(ensure.join(''),file),
+    "module.exports=" + splitHandle(ensure.join(''), file),
     "}"
   ].join('\n')
 }
