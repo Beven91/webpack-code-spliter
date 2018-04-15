@@ -57,7 +57,7 @@ Configure.prototype.iterator = function (point) {
   var file = path.isAbsolute(src) ? src : path.join(this.rootDir, src)
   var parser = path.parse(file);
   var chunkPath =path.join(parser.root,parser.dir);
-  chunkPath = chunkPath.split(this.rootDir).filter(filterEmpty).join('')
+  chunkPath = chunkPath.split(this.rootDir).filter(filterEmpty).join('').replace(parser.root,'');
   name = name ? name : chunkPath.split(path.sep).filter(filterEmpty).join('.');
   name = this.name + '/' + name.toLowerCase();
   if (route.name) {
