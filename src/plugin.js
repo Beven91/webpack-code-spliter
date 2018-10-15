@@ -86,10 +86,10 @@ CodeSpliterPlugin.prototype.apply = function (compiler) {
  */
 CodeSpliterPlugin.prototype.registryReplacement = function (params) {
   params.normalModuleFactory.plugin("parser", function (parser) {
-    if(ParserHelpers.toConstantDependency.length <2){
+    if (ParserHelpers.toConstantDependency.length < 2) {
       parser.plugin('expression ' + REPLACEMENT, ParserHelpers.toConstantDependency(REPLACEMENT));
-    }else{
-      parser.plugin('expression ' + REPLACEMENT, ParserHelpers.toConstantDependency(parser,REPLACEMENT));
+    } else {
+      parser.plugin('expression ' + REPLACEMENT, ParserHelpers.toConstantDependency(parser, REPLACEMENT));
     }
     parser.plugin('evaluate typeof ' + REPLACEMENT, ParserHelpers.evaluateToString('string'));
   })
@@ -106,7 +106,8 @@ CodeSpliterPlugin.prototype.registryReplaceModuleId = function (compilation) {
       var originalId = findEnsureModuleId(module);
       var replacements = source.replacements || [];
       replacements.forEach(function (replace) {
-        if (replace[2] === REPLACEMENT) {
+        var id = replace.content || replace[2];
+        if (id === REPLACEMENT) {
           replace[2] = originalId;
         }
       })
