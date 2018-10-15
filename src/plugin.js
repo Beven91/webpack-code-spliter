@@ -106,9 +106,10 @@ CodeSpliterPlugin.prototype.registryReplaceModuleId = function (compilation) {
       var originalId = findEnsureModuleId(module);
       var replacements = source.replacements || [];
       replacements.forEach(function (replace) {
-        var id = replace.content || replace[2];
-        if (id === REPLACEMENT) {
+        if (replace[2] == REPLACEMENT) {
           replace[2] = originalId;
+        } else if (replace.content == REPLACEMENT) {
+          replace.content = originalId;
         }
       })
     }
